@@ -1,23 +1,575 @@
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
+
 body {
   min-height: 100vh;
-  display: flex; align-items: center; justify-content: center;
-  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: url('bg.jpg') center/cover no-repeat fixed;
+  background-color: #000814;
+  overflow: hidden;
+  position: relative;
 }
+
+body::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 5, 15, 0.55);
+  z-index: 0;
+}
+
+.top-left, .right-text, .bottom-left {
+  position: fixed;
+  color: #4da6ff;
+  font-size: 13px;
+  letter-spacing: 2px;
+  font-weight: 500;
+  z-index: 2;
+  opacity: 0.7;
+}
+
+.top-left { top: 30px; left: 30px; line-height: 1.6; }
+.right-text { right: 30px; top: 50%; transform: translateY(-50%); text-align: right; line-height: 1.6; }
+
+.right-text .line {
+  display: inline-block;
+  width: 40px;
+  height: 2px;
+  background: #4da6ff;
+  margin-top: 10px;
+}
+
+.bottom-left {
+  bottom: 30px;
+  left: 30px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.bottom-left .dot { color: #4da6ff; opacity: 0.5; }
+
 .login-box {
-  background: #fff; padding: 40px; border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3); width: 340px; text-align: center;
+  position: relative;
+  z-index: 2;
+  background: rgba(5, 15, 30, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 40px 35px;
+  border-radius: 20px;
+  box-shadow:
+    0 25px 80px rgba(0,0,0,0.7),
+    0 0 0 1px rgba(77, 166, 255, 0.2),
+    inset 0 1px 0 rgba(255,255,255,0.05);
+  width: 380px;
+  text-align: center;
+  max-height: 95vh;
+  overflow-y: auto;
 }
-.login-box h2 { margin-bottom: 25px; color: #1e3c72; }
-.login-box input {
-  width: 100%; padding: 12px; margin-bottom: 15px;
-  border: 1px solid #ccc; border-radius: 6px; font-size: 15px;
+
+.logo {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 15px;
+  filter: drop-shadow(0 0 20px rgba(77, 166, 255, 0.6));
 }
-.login-box button {
-  width: 100%; padding: 12px; border: none; border-radius: 6px;
-  background: #1e3c72; color: #fff; font-size: 16px; cursor: pointer;
+
+.logo svg { width: 100%; height: 100%; }
+
+.login-box h2 {
+  color: #fff;
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.login-box h2 .highlight { color: #4da6ff; }
+
+.subtitle {
+  color: #8899aa;
+  font-size: 13px;
+  margin-bottom: 25px;
+  font-weight: 300;
+}
+
+.input-group { position: relative; margin-bottom: 14px; }
+
+.input-group i:first-child {
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #4da6ff;
+  font-size: 15px;
+}
+
+.input-group .toggle-password {
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #8899aa;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.input-group .toggle-password:hover { color: #4da6ff; }
+
+.input-group input {
+  width: 100%;
+  padding: 14px 48px 14px 45px;
+  background: rgba(0, 10, 25, 0.6);
+  border: 1px solid rgba(77, 166, 255, 0.2);
+  border-radius: 10px;
+  color: #fff;
+  font-size: 14px;
+  font-family: 'Cairo', sans-serif;
   transition: 0.3s;
 }
-.login-box button:hover { background: #2a5298; }
-.login-box button:disabled { opacity: 0.6; cursor: not-allowed; }
-#msg { margin-top: 15px; color: #333; font-size: 14px; }
+
+.input-group input:focus {
+  outline: none;
+  border-color: #4da6ff;
+  background: rgba(0, 15, 35, 0.8);
+  box-shadow: 0 0 0 3px rgba(77, 166, 255, 0.15);
+}
+
+.input-group input::placeholder { color: #556677; }
+
+.options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+  font-size: 13px;
+}
+
+.remember {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #8899aa;
+  cursor: pointer;
+}
+
+.remember input { accent-color: #4da6ff; cursor: pointer; }
+
+.forgot { color: #4da6ff; text-decoration: none; transition: 0.2s; }
+.forgot:hover { text-decoration: underline; }
+
+.login-box button[type="submit"] {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #0066ff, #4da6ff);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: 'Cairo', sans-serif;
+  cursor: pointer;
+  transition: 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 8px 25px rgba(0, 102, 255, 0.4);
+}
+
+.login-box button[type="submit"]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 35px rgba(0, 102, 255, 0.6);
+}
+
+.login-box button[type="submit"]:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  margin: 20px 0 15px;
+  color: #556677;
+  font-size: 12px;
+}
+
+.divider::before, .divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(77, 166, 255, 0.15);
+}
+
+.divider span { padding: 0 15px; }
+
+.social {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.social-btn {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 10, 25, 0.6);
+  border: 1px solid rgba(77, 166, 255, 0.2);
+  border-radius: 10px;
+  color: #fff;
+  font-size: 20px;
+  text-decoration: none;
+  transition: 0.3s;
+  cursor: pointer;
+}
+
+.social-btn:hover {
+  border-color: #4da6ff;
+  background: rgba(0, 20, 50, 0.8);
+  transform: translateY(-2px);
+}
+
+.social-btn.google { color: #ea4335; }
+.social-btn.google:hover { background: #ea4335 !important; border-color: #ea4335 !important; }
+.social-btn.tiktok { color: #fff; }
+.social-btn.tiktok:hover { background: #fe2c55 !important; border-color: #fe2c55 !important; }
+.social-btn.discord { color: #fff; }
+.social-btn.discord:hover { background: #5865F2 !important; border-color: #5865F2 !important; }
+.social-btn.github { color: #fff; }
+.social-btn.github:hover { background: #238636 !important; border-color: #238636 !important; }
+
+#msg { margin-top: 12px; color: #4da6ff; font-size: 13px; }
+
+/* ============ نوافذ منبثقة ============ */
+.close-btn {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: transparent;
+  border: none;
+  color: #888;
+  font-size: 20px;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  transition: 0.2s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* ============ TikTok ============ */
+.tiktok-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  backdrop-filter: blur(8px);
+}
+
+.tiktok-modal.active { display: flex; animation: fadeIn 0.3s ease; }
+
+.tiktok-content {
+  background: #fff;
+  border-radius: 16px;
+  padding: 35px 30px;
+  width: 100%;
+  max-width: 400px;
+  position: relative;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: slideUp 0.3s ease;
+}
+
+.tiktok-header { text-align: center; margin-bottom: 20px; }
+.tiktok-logo { width: 50px; height: 50px; color: #000; margin-bottom: 10px; }
+.tiktok-header h3 { font-size: 22px; color: #000; font-weight: 700; }
+
+.tiktok-warning {
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  border-radius: 10px;
+  padding: 12px 15px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #856404;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.tiktok-warning i { color: #ffc107; font-size: 18px; flex-shrink: 0; }
+
+.tiktok-input { position: relative; margin-bottom: 14px; }
+.tiktok-input i { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #888; font-size: 15px; }
+.tiktok-input input {
+  width: 100%;
+  padding: 14px 45px 14px 15px;
+  background: #f8f8f8;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  color: #000;
+  font-size: 14px;
+  transition: 0.2s;
+}
+.tiktok-input input:focus { outline: none; border-color: #000; background: #fff; }
+.tiktok-input input::placeholder { color: #999; }
+
+#tiktokLoginBtn {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 8px;
+  background: #000;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+#tiktokLoginBtn:hover { background: #333; }
+#tiktokLoginBtn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.tiktok-forgot { text-align: center; margin-top: 15px; font-size: 13px; }
+.tiktok-forgot a { color: #fe2c55; text-decoration: none; font-weight: 500; }
+.tiktok-forgot a:hover { text-decoration: underline; }
+
+.tiktok-divider { display: flex; align-items: center; margin: 20px 0; color: #999; font-size: 12px; }
+.tiktok-divider::before, .tiktok-divider::after { content: ''; flex: 1; height: 1px; background: #e0e0e0; }
+.tiktok-divider span { padding: 0 15px; }
+
+.tiktok-signup { text-align: center; font-size: 13px; color: #666; }
+.tiktok-signup a { color: #fe2c55; text-decoration: none; font-weight: 600; }
+.tiktok-signup a:hover { text-decoration: underline; }
+
+/* ============ Discord ============ */
+.discord-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  backdrop-filter: blur(8px);
+}
+
+.discord-modal.active { display: flex; animation: fadeIn 0.3s ease; }
+
+.discord-content {
+  background: #313338;
+  border-radius: 16px;
+  padding: 35px 30px;
+  width: 100%;
+  max-width: 420px;
+  position: relative;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: slideUp 0.3s ease;
+  color: #fff;
+}
+
+.discord-header { text-align: center; margin-bottom: 20px; }
+.discord-logo { width: 55px; height: 55px; color: #5865F2; margin-bottom: 10px; }
+.discord-header h3 { font-size: 22px; color: #fff; font-weight: 700; }
+
+.discord-warning {
+  background: rgba(88, 101, 242, 0.15);
+  border: 1px solid rgba(88, 101, 242, 0.4);
+  border-radius: 10px;
+  padding: 12px 15px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #b8beff;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.discord-warning i { color: #5865F2; font-size: 18px; flex-shrink: 0; }
+
+.discord-input { position: relative; margin-bottom: 14px; }
+.discord-input i { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #a3a6aa; font-size: 15px; }
+.discord-input input {
+  width: 100%;
+  padding: 14px 45px 14px 15px;
+  background: #1e1f22;
+  border: 1px solid #1e1f22;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 14px;
+  transition: 0.2s;
+}
+.discord-input input:focus { outline: none; border-color: #5865F2; }
+.discord-input input::placeholder { color: #87898c; }
+
+#discordLoginBtn {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 8px;
+  background: #5865F2;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+#discordLoginBtn:hover { background: #4752c4; }
+#discordLoginBtn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.discord-forgot { text-align: center; margin-top: 15px; font-size: 13px; }
+.discord-forgot a { color: #00a8fc; text-decoration: none; font-weight: 500; }
+.discord-forgot a:hover { text-decoration: underline; }
+
+.discord-divider { display: flex; align-items: center; margin: 20px 0; color: #87898c; font-size: 12px; }
+.discord-divider::before, .discord-divider::after { content: ''; flex: 1; height: 1px; background: #3f4147; }
+.discord-divider span { padding: 0 15px; }
+
+.discord-signup { text-align: center; font-size: 13px; color: #b5bac1; }
+.discord-signup a { color: #00a8fc; text-decoration: none; font-weight: 600; }
+.discord-signup a:hover { text-decoration: underline; }
+
+.discord-content .close-btn { color: #a3a6aa; }
+.discord-content .close-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+
+/* ============ GitHub ============ */
+.github-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  backdrop-filter: blur(8px);
+}
+
+.github-modal.active { display: flex; animation: fadeIn 0.3s ease; }
+
+.github-content {
+  background: #0d1117;
+  border: 1px solid #30363d;
+  border-radius: 16px;
+  padding: 35px 30px;
+  width: 100%;
+  max-width: 400px;
+  position: relative;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: slideUp 0.3s ease;
+  color: #fff;
+}
+
+.github-header { text-align: center; margin-bottom: 20px; }
+.github-logo { width: 55px; height: 55px; color: #fff; margin-bottom: 10px; }
+.github-header h3 { font-size: 22px; color: #fff; font-weight: 700; }
+
+.github-warning {
+  background: rgba(88, 166, 255, 0.1);
+  border: 1px solid rgba(88, 166, 255, 0.3);
+  border-radius: 10px;
+  padding: 12px 15px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #79c0ff;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.github-warning i { color: #58a6ff; font-size: 18px; flex-shrink: 0; }
+
+.github-input { position: relative; margin-bottom: 14px; }
+.github-input i { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #8b949e; font-size: 15px; }
+.github-input input {
+  width: 100%;
+  padding: 14px 45px 14px 15px;
+  background: #010409;
+  border: 1px solid #30363d;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 14px;
+  transition: 0.2s;
+}
+.github-input input:focus { outline: none; border-color: #58a6ff; box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.15); }
+.github-input input::placeholder { color: #6e7681; }
+
+#githubLoginBtn {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 8px;
+  background: #238636;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+#githubLoginBtn:hover { background: #2ea043; }
+#githubLoginBtn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.github-forgot { text-align: center; margin-top: 15px; font-size: 13px; }
+.github-forgot a { color: #58a6ff; text-decoration: none; font-weight: 500; }
+.github-forgot a:hover { text-decoration: underline; }
+
+.github-divider { display: flex; align-items: center; margin: 20px 0; color: #6e7681; font-size: 12px; }
+.github-divider::before, .github-divider::after { content: ''; flex: 1; height: 1px; background: #30363d; }
+.github-divider span { padding: 0 15px; }
+
+.github-signup { text-align: center; font-size: 13px; color: #8b949e; }
+.github-signup a { color: #58a6ff; text-decoration: none; font-weight: 600; }
+.github-signup a:hover { text-decoration: underline; }
+
+.github-content .close-btn { color: #8b949e; }
+.github-content .close-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+
+/* ============ الجوال ============ */
+@media (max-width: 480px) {
+  .login-box { width: 92%; padding: 30px 20px; }
+  .top-left, .right-text, .bottom-left { font-size: 10px; opacity: 0.5; }
+  .top-left { top: 15px; left: 15px; }
+  .right-text { display: none; }
+  .bottom-left { bottom: 15px; left: 15px; gap: 6px; }
+  .login-box h2 { font-size: 24px; }
+  .tiktok-content, .discord-content, .github-content { padding: 30px 20px; }
+  }
