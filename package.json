@@ -1,7 +1,7 @@
 {
   "name": "jino-logger",
   "version": "1.0.0",
-  "description": "Login demo",
+  "description": "Login page",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
